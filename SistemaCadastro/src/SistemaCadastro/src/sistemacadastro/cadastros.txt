@@ -1,0 +1,8 @@
+7
+0000 01 Teste-testus 1320.0
+0001 05 João-de-Almeida 4827.89
+0002 15 Maria-do-Carmo 1764.0
+0003 16 Carlos-de-Araújo 3753.0
+0004 08 Daniela-Bezerra 1082.0
+0005 07 Bruno-Souza 1320.0
+0006 05 Marluce-Bezerra 1320.0

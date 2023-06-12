@@ -2,7 +2,11 @@ package sistemaCadastro;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.ArrayList;
+
 
 
 public class Main {
@@ -23,10 +27,67 @@ public class Main {
             System.out.println(" Salario: R$ " + f[i].salario);
    }
 
-	public static void casdastrarFuncionario(Funcionario [] f, Funcionario [] new_f) {
-
+	public static void casdastrarFuncionario(ArrayList<Funcionario> novosFuncionariosCadastrados) {
+		Scanner s = new Scanner(System.in);
+		Funcionario novoF = new Funcionario();
+		System.out.println("Insira a matrícula do novo funcionário");
+		novoF.matricula = s.next();
+		System.out.println("Insira o código do cargo do novo funcionário");
+		novoF.codigo_cargo = s.next();
+		System.out.println("Insira o nome do novo funcionário");
+		novoF.nome = s.next();
+		System.out.println("Insira o salário do novo funcionário");
+		novoF.salario = s.nextDouble();
+		
+		novosFuncionariosCadastrados.add(novoF);
 	}
 
+	public static void salvarCadastros(Funcionario []f, ArrayList<Funcionario> novosFuncionariosCadastrados) {
+		Funcionario novof = new Funcionario();
+		
+		bubblesortMatricula(f);
+		// subscrever cadastros.txt com cadastros antigos + cadastros novos
+        try {
+            File arquivo = new File("C:\\\\Users\\\\Usuario\\\\eclipse-workspace\\\\sistemaCadastro\\\\src\\\\sistemaCadastro\\\\cadastros.txt");
+            FileWriter writer = new FileWriter(arquivo);
+            
+            writer.write(String.valueOf(f.length + novosFuncionariosCadastrados.size()));
+            for (int i = 0; i < f.length; i++) {
+            	writer.write('\n' + f[i].matricula + " " + f[i].codigo_cargo + " " + f[i].nome + " " + f[i].salario);
+            }
+            for (int i = 0; i < novosFuncionariosCadastrados.size(); i++) {
+            	novof = novosFuncionariosCadastrados.get(i);
+            	writer.write("\n" + novof.matricula + " " + novof.codigo_cargo + " " + novof.nome + " " + novof.salario);
+  		    }
+            writer.close();
+
+            System.out.println("O cadastro atual foi salvo com sucesso!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public static void bubblesortMatricula (Funcionario f []) {
+		int i, fim, pos;
+		Funcionario chave;
+		boolean troca;
+		fim = f.length - 2; pos = 0;
+		do {
+			troca = false;
+			for (i = 0; i <= fim; i++) {
+				if (f[i].matricula.compareTo(f[i + 1].matricula) > 0) {
+					chave = f[i]; 
+					f[i] = f[i+1]; 
+					f[i+1] = chave;
+					
+					pos = i; 
+					troca = true;
+				}
+			}
+			fim = pos-1;
+			} while (troca == true);
+	}
+	
 	public static void bubblesortNome (Funcionario f []) {
 		int i, fim, pos;
 		Funcionario chave;
@@ -135,7 +196,7 @@ public class Main {
 	}
 	
 	public static void menu() {
-		System.out.println("\n\n### SISTEMA ###");
+		System.out.println("\n\n######## SISTEMA DE CADASTROS ########");
 		System.out.println("\n=======================================");
 		System.out.println("1 - Ler cadastros");
 		System.out.println("2 - Casdatrar funcionário");
@@ -147,6 +208,7 @@ public class Main {
 		System.out.println("8 - Salvar cadastro atual (txt)");
 		System.out.println("0 - Sair");
 		System.out.println("=======================================\n");
+		System.out.print("\n");
 	}
 	
 	public static void salarioMenor(Funcionario f []) {
@@ -176,7 +238,7 @@ public class Main {
 		Funcionario []novoF;
 		
 		for(i = 0; i < f.length; i++) {
-			if(f[i].salario > 6520.00) {
+			if(f[i].salario > 1320.00) {
 				contador++;
 			}
 		}
@@ -184,7 +246,7 @@ public class Main {
 		novoF = new Funcionario[contador];
 		
 		for(i = 0; i < f.length; i++) {
-			if(f[i].salario > 6520.00) {
+			if(f[i].salario > 1320.00) {
 				novoF[n] = f[i];
 				n++;
 			}
@@ -198,7 +260,7 @@ public class Main {
 		Funcionario []novoF;
 		
 		for(i = 0; i < f.length; i++) {
-			if(f[i].salario == 4000.00) {
+			if(f[i].salario == 1320.00) {
 				contador++;
 			}
 		}
@@ -206,7 +268,7 @@ public class Main {
 		novoF = new Funcionario[contador];
 		
 		for(i = 0; i < f.length; i++) {
-			if(f[i].salario == 4000.00) {
+			if(f[i].salario == 1320.00) {
 				novoF[n] = f[i];
 				n++;
 			}
@@ -222,7 +284,10 @@ public class Main {
 		//declaracao vetor funcionarios
 		Funcionario [] f; 
 	    f = new Funcionario[0];
-	    File file = new File("C:\\Users\\gabri\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
+	    //declaracao da ArrayList
+	    ArrayList<Funcionario> novosFuncionarios = new ArrayList<Funcionario>();
+	    
+	    File file = new File("C:\\Users\\Usuario\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
 		int tamanho;
 
 	    try (Scanner scanner = new Scanner(file)) {
@@ -242,15 +307,13 @@ public class Main {
 		
 		do {
 			menu();
-
 			opcao = s.nextInt();
-			System.out.print("\n");
 			switch (opcao) {
 			case 1:
 				exibeFuncionario(f);
 				break;
 			case 2:
-				//casdastrarFuncionario(f);
+				casdastrarFuncionario(novosFuncionarios);
 				break;
 			case 3:
 				System.out.println("Você deseja ordenar os funcionários por nome, código do cargo ou salário?\n0: Nome\n1: Código do cargo\n2: Salário");
@@ -292,6 +355,9 @@ public class Main {
 				break;
 			case 7:
 				salarioIgual(f);
+				break;
+			case 8:
+				salvarCadastros(f, novosFuncionarios);
 				break;
 			case 0:
 				System.out.println("Até a próxima");
