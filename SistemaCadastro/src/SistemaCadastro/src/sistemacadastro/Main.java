@@ -8,14 +8,37 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 
-
 public class Main {
+	
+	//declaracao vetor funcionarios
+	static Funcionario [] f = new Funcionario[0];
+	//declaracao da ArrayList
+	static ArrayList<Funcionario> novosFuncionarios = new ArrayList<Funcionario>();
+	
+	public static void lerCadastro() {
+		File file = new File("C:\\Users\\gabri\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
+		int tamanho;
+
+	    try (Scanner scanner = new Scanner(file)) {
+	    	tamanho = Integer.parseInt(scanner.next());
+	    	f = new Funcionario[tamanho];
+	    	for (int i = 0; i < tamanho; i++) {
+	    		f[i] = new Funcionario();
+	    		f[i].matricula = scanner.next();
+	    		f[i].codigo_cargo = scanner.next();
+	            f[i].nome = scanner.next();
+	            f[i].salario = Double.parseDouble(scanner.next());
+	           }
+	    } catch (FileNotFoundException ex) {
+	            ex.printStackTrace();
+	    }     
+	}
 	
 	public static void exibeFuncionario (Funcionario []f ) { 
         for (int i = 0; i < f.length; i++) {
         	System.out.print("Matricula: " + f[i].matricula);
         	System.out.print(" Codigo do cargo: " + f[i].codigo_cargo);
-            System.out.print(" Nome: " + f[i].nome);
+            System.out.print(" Nome: " + f[i].nome.replace('-', ' '));
             System.out.println(" Salario: R$ " + f[i].salario);
         }
    }
@@ -23,7 +46,7 @@ public class Main {
 	public static void exibeUnicoFuncionario (Funcionario []f, int i ) { 
         	System.out.print("Matricula: " + f[i].matricula);
         	System.out.print(" Codigo do cargo: " + f[i].codigo_cargo);
-            System.out.print(" Nome: " + f[i].nome);
+            System.out.print(" Nome: " + f[i].nome.replace('-', ' '));
             System.out.println(" Salario: R$ " + f[i].salario);
    }
 
@@ -48,7 +71,7 @@ public class Main {
 		bubblesortMatricula(f);
 		// subscrever cadastros.txt com cadastros antigos + cadastros novos
         try {
-            File arquivo = new File("C:\\\\Users\\\\Usuario\\\\eclipse-workspace\\\\sistemaCadastro\\\\src\\\\sistemaCadastro\\\\cadastros.txt");
+            File arquivo = new File("C:\\Users\\gabri\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
             FileWriter writer = new FileWriter(arquivo);
             
             writer.write(String.valueOf(f.length + novosFuncionariosCadastrados.size()));
@@ -281,35 +304,13 @@ public class Main {
 		Scanner s = new Scanner(System.in);
 		int opcao, opcaoProcura, matriculaInput;
 		String nomeInput;
-		//declaracao vetor funcionarios
-		Funcionario [] f; 
-	    f = new Funcionario[0];
-	    //declaracao da ArrayList
-	    ArrayList<Funcionario> novosFuncionarios = new ArrayList<Funcionario>();
 	    
-	    File file = new File("C:\\Users\\Usuario\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
-		int tamanho;
-
-	    try (Scanner scanner = new Scanner(file)) {
-	    	tamanho = Integer.parseInt(scanner.next());
-	    	f = new Funcionario[tamanho];
-	    	for (int i = 0; i < tamanho; i++) {
-	    		f[i] = new Funcionario();
-	    		f[i].matricula = scanner.next();
-	    		f[i].codigo_cargo = scanner.next();
-	            f[i].nome = scanner.next();
-	            f[i].salario = Double.parseDouble(scanner.next());
-	           }
-	    } catch (FileNotFoundException ex) {
-	            ex.printStackTrace();
-	    }     
-	    
-		
 		do {
 			menu();
 			opcao = s.nextInt();
 			switch (opcao) {
 			case 1:
+				lerCadastro();
 				exibeFuncionario(f);
 				break;
 			case 2:
@@ -356,10 +357,8 @@ public class Main {
 			case 7:
 				salarioIgual(f);
 				break;
-			case 8:
-				salvarCadastros(f, novosFuncionarios);
-				break;
 			case 0:
+				salvarCadastros(f, novosFuncionarios);
 				System.out.println("Até a próxima");
 				break;
 			default:
