@@ -8,15 +8,19 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 
+
 public class Main {
 	
 	//declaracao vetor funcionarios
 	static Funcionario [] f = new Funcionario[0];
-	//declaracao da ArrayList
-	static ArrayList<Funcionario> novosFuncionarios = new ArrayList<Funcionario>();
-	
-	public static void lerCadastro() {
-		File file = new File("C:\\Users\\gabri\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
+    //declaracao da ArrayList
+    static ArrayList<Funcionario> novosFuncionarios = new ArrayList<Funcionario>();
+    //declaracao scanner
+    static Scanner s = new Scanner(System.in);
+    
+    // lê o cadastro dos funcionários de um arquivo txt e preenche o vetor de Funcionários
+    public static void lerCadastros () {
+    	File file = new File("C:\\Users\\Usuario\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
 		int tamanho;
 
 	    try (Scanner scanner = new Scanner(file)) {
@@ -32,46 +36,50 @@ public class Main {
 	    } catch (FileNotFoundException ex) {
 	            ex.printStackTrace();
 	    }     
-	}
+    }
 	
+    // exibe todos os funcionários do vetor
 	public static void exibeFuncionario (Funcionario []f ) { 
         for (int i = 0; i < f.length; i++) {
         	System.out.print("Matricula: " + f[i].matricula);
         	System.out.print(" Codigo do cargo: " + f[i].codigo_cargo);
-            System.out.print(" Nome: " + f[i].nome.replace('-', ' '));
+            System.out.print(" Nome: " + f[i].nome);
             System.out.println(" Salario: R$ " + f[i].salario);
         }
    }
 	
+	// exibe um único funcionário do vetor, dado seu indíce
 	public static void exibeUnicoFuncionario (Funcionario []f, int i ) { 
         	System.out.print("Matricula: " + f[i].matricula);
         	System.out.print(" Codigo do cargo: " + f[i].codigo_cargo);
-            System.out.print(" Nome: " + f[i].nome.replace('-', ' '));
+            System.out.print(" Nome: " + f[i].nome);
             System.out.println(" Salario: R$ " + f[i].salario);
    }
 
+	// usa da coleção ArrayList para cadastrar n funcionários
 	public static void casdastrarFuncionario(ArrayList<Funcionario> novosFuncionariosCadastrados) {
-		Scanner s = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in);
 		Funcionario novoF = new Funcionario();
 		System.out.println("Insira a matrícula do novo funcionário");
-		novoF.matricula = s.next();
+		novoF.matricula = scanner.next();
 		System.out.println("Insira o código do cargo do novo funcionário");
-		novoF.codigo_cargo = s.next();
+		novoF.codigo_cargo = scanner.next();
 		System.out.println("Insira o nome do novo funcionário");
-		novoF.nome = s.next();
+		novoF.nome = scanner.next();
 		System.out.println("Insira o salário do novo funcionário");
-		novoF.salario = s.nextDouble();
+		novoF.salario = scanner.nextDouble();
 		
 		novosFuncionariosCadastrados.add(novoF);
 	}
 
+	// subescreve o cadastro atual com o novo número de funcionários, os funcionários antigos e os funcionários recém cadastrados
 	public static void salvarCadastros(Funcionario []f, ArrayList<Funcionario> novosFuncionariosCadastrados) {
 		Funcionario novof = new Funcionario();
-		
+		// ordernar os cadastros por matricula antes de salvar
 		bubblesortMatricula(f);
 		// subscrever cadastros.txt com cadastros antigos + cadastros novos
         try {
-            File arquivo = new File("C:\\Users\\gabri\\eclipse-workspace\\sistemaCadastro\\src\\sistemaCadastro\\cadastros.txt");
+            File arquivo = new File("C:\\\\Users\\\\Usuario\\\\eclipse-workspace\\\\sistemaCadastro\\\\src\\\\sistemaCadastro\\\\cadastros.txt");
             FileWriter writer = new FileWriter(arquivo);
             
             writer.write(String.valueOf(f.length + novosFuncionariosCadastrados.size()));
@@ -89,7 +97,8 @@ public class Main {
             e.printStackTrace();
         }
 	}
-	
+
+	// algoritmo de ordenação para ordenar o vetor funcionários pela matrícula
 	public static void bubblesortMatricula (Funcionario f []) {
 		int i, fim, pos;
 		Funcionario chave;
@@ -111,6 +120,7 @@ public class Main {
 			} while (troca == true);
 	}
 	
+	// algoritmo de ordenação para ordenar o vetor funcionários pelo nome
 	public static void bubblesortNome (Funcionario f []) {
 		int i, fim, pos;
 		Funcionario chave;
@@ -132,6 +142,7 @@ public class Main {
 			} while (troca == true);
 	}
 	
+	// algoritmo de ordenação para ordenar o vetor funcionários pelo cargo
 	public static void bubblesortCargo (Funcionario f []) {
 		int i, fim, pos;
 		Funcionario chave;
@@ -153,6 +164,7 @@ public class Main {
 			} while (troca == true);
 	}
 	
+	// algoritmo de ordenação para ordenar o vetor funcionários pelo salário
 	public static void bubblesortSalario (Funcionario f []) {
 		int i, fim, pos;
 		Funcionario chave;
@@ -174,7 +186,47 @@ public class Main {
 			fim = pos-1;
 			} while (troca == true);
 	}
+
+	// recebe entrada do usuário para escolher de que forma será a ordenação dos funcionários
+	public static void escolherOpcaoDeOrdenacao (int opcao) {
+		if (opcao == 1) {
+			bubblesortMatricula(f);
+			exibeFuncionario(f);
+		} else if(opcao == 2) {
+			bubblesortNome(f);
+			exibeFuncionario(f);
+		} else if (opcao == 3) {
+			bubblesortCargo(f);
+			exibeFuncionario(f);
+		} else if (opcao == 4) {
+			bubblesortSalario(f);
+			exibeFuncionario(f);
+		} else {
+			System.out.println("Essa opção é inválida.");
+		}
+		
+	}
 	
+	// recebe entrada do usuário para escolher a forma de busca
+	public static void escolherOpcaoDeBusca (int opcao) {
+		int matriculaInput;
+		String nomeInput;
+		
+		if(opcao == 1) {
+			System.out.println("Insira a matricula do funcionário(a) que deseja procurar:");
+			matriculaInput = s.nextInt();
+			exibeUnicoFuncionario(f, buscaBinaria(f, matriculaInput));
+		} else if (opcao == 2) {
+			System.out.println("Insira o nome do funcionário(a) que deseja procurar:");
+			nomeInput = s.next();
+			exibeUnicoFuncionario(f, buscaSequencial(f, nomeInput));
+		}
+		else {
+			System.out.println("Insira uma opção válida");
+		}	
+	}
+	
+	// algoritmo de busca binaria para procurar funcionário pela matrícula
 	public static int buscaBinaria (Funcionario f[ ], int chave) {
 		int n = f.length;
 		int inicio = 0, meio = Math.round(f.length / 2), fim = n - 1;
@@ -200,6 +252,7 @@ public class Main {
 			}
 	}
 	
+	// algoritmo de busca sequencial para procurar funcionário pela nome
 	public static int buscaSequencial (Funcionario f[ ], String procurado) {
 		int i;
 		boolean achou = false;
@@ -217,7 +270,9 @@ public class Main {
 			return -1; // retorna -1 indicando que não achou a chave
 		}
 	}
-	
+
+	// exibe menu de opções para o funcionário interagir com o sistema
+	// exibe menus
 	public static void menu() {
 		System.out.println("\n\n######## SISTEMA DE CADASTROS ########");
 		System.out.println("\n=======================================");
@@ -228,12 +283,13 @@ public class Main {
 		System.out.println("5 - Funcionários c/ salário > 1320,00");
 		System.out.println("6 - Funcionários c/ salário < 1320,00");
 		System.out.println("7 - Funcionários c/ salário == 1320,00");
-		System.out.println("8 - Salvar cadastro atual (txt)");
-		System.out.println("0 - Sair");
+		System.out.println("0 - Salvar cadastro atual e sair");
 		System.out.println("=======================================\n");
 		System.out.print("\n");
 	}
 	
+	// filtra funcionários com salário < 1320.00
+	// filtra os funcionários com salário < 1320.00
 	public static void salarioMenor(Funcionario f []) {
 		int i, n = 0, contador = 0;
 		Funcionario []novoF;
@@ -256,6 +312,8 @@ public class Main {
 		exibeFuncionario(novoF);
 	}
 	
+	// filtra funcionários com salário > 1320.00
+	// filtra os funcionários com salário > 1320.00
 	public static void salarioMaior(Funcionario f []) {
 		int i, n = 0, contador = 0;
 		Funcionario []novoF;
@@ -278,6 +336,8 @@ public class Main {
 		exibeFuncionario(novoF);
 	}
 
+	// filtra funcionários com salário == 1320.00
+	// filtra os funcionários com salário == 1320.00
 	public static void salarioIgual(Funcionario f []) {
 		int i, n = 0, contador = 0;
 		Funcionario []novoF;
@@ -300,53 +360,35 @@ public class Main {
 		exibeFuncionario(novoF);
 	}
 	
+	// programa principal
 	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
-		int opcao, opcaoProcura, matriculaInput;
-		String nomeInput;
-	    
+		int opcao, opcaoProcura;
+		
+		// lerCadastros();   implementar: chamar função assim que executar a main, para que as outras funções funcionem da devida forma
+		
 		do {
 			menu();
 			opcao = s.nextInt();
 			switch (opcao) {
 			case 1:
-				lerCadastro();
-				exibeFuncionario(f);
+				lerCadastros();
+				System.out.println("Os cadastros foram lidos com sucesso!");
 				break;
 			case 2:
 				casdastrarFuncionario(novosFuncionarios);
+				System.out.println("Funcionário cadastrado com sucesso!");
 				break;
 			case 3:
-				System.out.println("Você deseja ordenar os funcionários por nome, código do cargo ou salário?\n0: Nome\n1: Código do cargo\n2: Salário");
+				// lerCadastros();   implementar: ler cadastro aqui, para que seja possível ordenas os funcionários
+				System.out.println("Você deseja ordenar os funcionários por nome, código do cargo ou salário?\n1: Matrícula\n2: Nome\n3: Código do cargo\n4: Salário");
 				opcaoProcura = s.nextInt();
-				if(opcaoProcura == 0) {
-					bubblesortNome(f);
-					exibeFuncionario(f);
-				}
-				else if (opcaoProcura == 1) {
-					bubblesortCargo(f);
-					exibeFuncionario(f);
-				}
-				else if (opcaoProcura == 2) {
-					bubblesortSalario(f);
-					exibeFuncionario(f);
-				}
+				escolherOpcaoDeOrdenacao(opcaoProcura);
 				break;
 			case 4:
-				System.out.println("Você deseja procuar o funcionário pelo sua matricula ou pelo seu nome?\n0: Matricula\n1: Nome");
+				// lerCadastros();   implementar: ler cadastro aqui, para que seja possível procura por funcionário
+				System.out.println("Você deseja procuar o funcionário pelo sua matricula ou pelo seu nome?\n1: Matricula\n2: Nome");
 				opcaoProcura = s.nextInt();
-				if(opcaoProcura == 0) {
-					System.out.println("Insira a matricula do funcionário(a) que deseja procurar:");
-					matriculaInput = s.nextInt();
-					exibeUnicoFuncionario(f, buscaBinaria(f, matriculaInput));
-				} else if (opcaoProcura == 1) {
-					System.out.println("Insira o nome do funcionário(a) que deseja procurar:");
-					nomeInput = s.next();
-					exibeUnicoFuncionario(f, buscaSequencial(f, nomeInput));
-				}
-				else {
-					System.out.println("Insira uma opção válida");
-				}	
+				escolherOpcaoDeBusca(opcaoProcura);		
 				break;
 			case 5:
 				salarioMaior(f);
@@ -358,6 +400,7 @@ public class Main {
 				salarioIgual(f);
 				break;
 			case 0:
+				lerCadastros();
 				salvarCadastros(f, novosFuncionarios);
 				System.out.println("Até a próxima");
 				break;
